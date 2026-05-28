@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Badges — Saxon Math Course 2</title>
+    <link rel="stylesheet" th:href="@{/css/quiz.css}"/>
+    <link rel="stylesheet" th:href="@{/css/auth.css}"/>
+    <link rel="stylesheet" th:href="@{/css/nav.css}"/>
+</head>
+<body>
+
+<header class="app-header">
+    <div class="header-content">
+        <span class="header-icon">🏆</span>
+        <div>
+            <h1>Your Badges</h1>
+            <p>Complete tests to earn badges and track your progress.</p>
+        </div>
+        <div class="header-profile" th:if="${user}">
+            <div class="profile-section">
+                <div class="profile-avatar" th:if="${user.avatarType == 'emoji'}">
+                    <span class="avatar-emoji" th:text="${user.avatar}">😊</span>
+                </div>
+                <div class="profile-avatar" th:if="${user.avatarType == 'image'}">
+                    <img class="avatar-img" th:src="${user.avatar}" alt="Profile"/>
+                </div>
+                <a th:href="@{/logout}" class="logout-link">Sign out</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="app-layout">
+    <nav class="sidebar-nav">
+        <a th:href="@{/lessons}" class="nav-item">
+            <span class="nav-icon">🎓</span>
+            <span class="nav-label">Lessons</span>
+        </a>
+        <a th:href="@{/quiz}" class="nav-item">
+            <span class="nav-icon">✏️</span>
+            <span class="nav-label">Practice</span>
+        </a>
+        <a th:href="@{/tests}" class="nav-item">
+            <span class="nav-icon">📝</span>
+            <span class="nav-label">Tests</span>
+        </a>
+        <a th:href="@{/badges}" class="nav-item active">
+            <span class="nav-icon">🏆</span>
+            <span class="nav-label">Badges</span>
+        </a>
+    </nav>
+
+    <main class="main-content">
+        <div class="badges-container">
+            <div class="badges-grid">
+                <div th:each="def : ${allBadges}"
+                     class="badge-card"
+                     th:classappend="${#lists.isEmpty(earnedBadges)} ? 'unearned' : 'unearned'"
+                     th:with="isEarned=${false}">
+                    <!-- Check if this badge is earned -->
+                    <th:block th:each="earned : ${earnedBadges}">
+                        <th:block th:if="${earned.badgeName == def.name}" th:with="isEarned=${true}">
+                        </th:block>
+                    </th:block>
+                    <span class="badge-emoji-large" th:text="${def.emoji}">🌟</span>
+                    <span class="badge-name" th:text="${def.name}">Badge Name</span>
+                    <span class="badge-desc" th:text="${def.description}">Description</span>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script th:inline="javascript">
+    // Mark earned badges with JS since Thymeleaf nested iteration is tricky
+    document.addEventListener('DOMContentLoaded', function() {
+        const earnedNames = /*[[${earnedBadges.![badgeName]}]]*/ [];
+        const cards = document.querySelectorAll('.badge-card');
+        cards.forEach(card => {
+            const name = card.querySelector('.badge-name').textContent;
+            if (earnedNames.includes(name)) {
+                card.classList.remove('unearned');
+                card.classList.add('earned');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

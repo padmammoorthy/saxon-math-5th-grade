@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Tests — Saxon Math Course 2</title>
+    <link rel="stylesheet" th:href="@{/css/quiz.css}"/>
+    <link rel="stylesheet" th:href="@{/css/auth.css}"/>
+    <link rel="stylesheet" th:href="@{/css/nav.css}"/>
+</head>
+<body>
+
+<header class="app-header">
+    <div class="header-content">
+        <span class="header-icon">📐</span>
+        <div>
+            <h1>Saxon Math — Course 2</h1>
+            <p>Challenge yourself with tests across all difficulty levels.</p>
+        </div>
+        <div class="header-profile" th:if="${user}">
+            <div class="profile-section">
+                <div class="profile-avatar" th:if="${user.avatarType == 'emoji'}">
+                    <span class="avatar-emoji" th:text="${user.avatar}">😊</span>
+                </div>
+                <div class="profile-avatar" th:if="${user.avatarType == 'image'}">
+                    <img class="avatar-img" th:src="${user.avatar}" alt="Profile"/>
+                </div>
+                <a th:href="@{/logout}" class="logout-link">Sign out</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="app-layout">
+    <nav class="sidebar-nav">
+        <a th:href="@{/lessons}" class="nav-item">
+            <span class="nav-icon">🎓</span>
+            <span class="nav-label">Lessons</span>
+        </a>
+        <a th:href="@{/quiz}" class="nav-item">
+            <span class="nav-icon">✏️</span>
+            <span class="nav-label">Practice</span>
+        </a>
+        <a th:href="@{/tests}" class="nav-item active">
+            <span class="nav-icon">📝</span>
+            <span class="nav-label">Tests</span>
+        </a>
+        <a th:href="@{/badges}" class="nav-item">
+            <span class="nav-icon">🏆</span>
+            <span class="nav-label">Badges</span>
+        </a>
+    </nav>
+
+    <main class="main-content">
+        <!-- Easy Tests -->
+        <section class="test-section">
+            <h2 class="section-title">
+                <span class="difficulty-dot easy"></span>
+                Easy Tests
+            </h2>
+            <div class="test-grid">
+                <div class="test-card easy" th:each="test : ${easyTests}">
+                    <div class="test-card-header easy">
+                        <span class="difficulty-badge easy">EASY</span>
+                    </div>
+                    <div class="test-card-body">
+                        <h3 th:text="${test.name}">Test Name</h3>
+                        <p th:text="${test.description}">Description</p>
+                        <a th:href="@{/tests/{id}(id=${test.id})}" class="take-test-btn easy">Start Test →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Medium Tests -->
+        <section class="test-section">
+            <h2 class="section-title">
+                <span class="difficulty-dot medium"></span>
+                Medium Tests
+            </h2>
+            <div class="test-grid">
+                <div class="test-card medium" th:each="test : ${mediumTests}">
+                    <div class="test-card-header medium">
+                        <span class="difficulty-badge medium">MEDIUM</span>
+                    </div>
+                    <div class="test-card-body">
+                        <h3 th:text="${test.name}">Test Name</h3>
+                        <p th:text="${test.description}">Description</p>
+                        <a th:href="@{/tests/{id}(id=${test.id})}" class="take-test-btn medium">Start Test →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hard Tests -->
+        <section class="test-section">
+            <h2 class="section-title">
+                <span class="difficulty-dot hard"></span>
+                Hard Tests
+            </h2>
+            <div class="test-grid">
+                <div class="test-card hard" th:each="test : ${hardTests}">
+                    <div class="test-card-header hard">
+                        <span class="difficulty-badge hard">HARD</span>
+                    </div>
+                    <div class="test-card-body">
+                        <h3 th:text="${test.name}">Test Name</h3>
+                        <p th:text="${test.description}">Description</p>
+                        <a th:href="@{/tests/{id}(id=${test.id})}" class="take-test-btn hard">Start Test →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+</body>
+</html>

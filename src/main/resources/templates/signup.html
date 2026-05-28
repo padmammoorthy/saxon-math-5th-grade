@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Sign Up — Saxon Math Quiz</title>
+    <link rel="stylesheet" th:href="@{/css/quiz.css}"/>
+    <link rel="stylesheet" th:href="@{/css/auth.css}"/>
+</head>
+<body class="auth-body">
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <span class="auth-icon">📐</span>
+            <h1>Create Account</h1>
+            <p>Join Saxon Math Course 2</p>
+        </div>
+
+        <div class="auth-alert auth-alert-error" th:if="${error}" th:text="${error}">Error</div>
+
+        <form th:action="@{/signup}" method="post" class="auth-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required
+                       placeholder="Choose a username" minlength="3"/>
+            </div>
+            <div class="form-group">
+                <label for="displayName">Display Name</label>
+                <input type="text" id="displayName" name="displayName" required
+                       placeholder="Your name (shown on profile)"/>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required
+                       placeholder="At least 4 characters" minlength="4"/>
+            </div>
+
+            <!-- Avatar selection -->
+            <div class="form-group">
+                <label>Profile Avatar</label>
+                <div class="avatar-toggle">
+                    <button type="button" class="toggle-btn active" id="btn-emoji" onclick="setAvatarType('emoji')">Emoji</button>
+                    <button type="button" class="toggle-btn" id="btn-image" onclick="setAvatarType('image')">Image URL</button>
+                </div>
+                <input type="hidden" name="avatarType" id="avatarType" value="emoji"/>
+            </div>
+
+            <!-- Emoji picker -->
+            <div class="form-group" id="emoji-section">
+                <label>Pick an emoji</label>
+                <div class="emoji-grid">
+                    <button type="button" class="emoji-option selected" onclick="selectEmoji(this, '😊')">😊</button>
+                    <button type="button" class="emoji-option" onclick="selectEmoji(this, '🧑‍🎓')">🧑‍🎓</button>
+                    <button type="button" class="emoji-option" onclick="selectEmoji(this, '🦊')">🦊</button>
+                    <button type="button" class="emoji-option" onclick="selectEmoji(this, '🐱')">🐱</button>
+                    <button type="button" class="emoji-option" onclick="selectEmoji(this, '🦄')">🦄</button>
+                    <button type="button" class="emoji-option" onclick="selectEmoji(this, '🚀')">🚀</button>
+                    <button type="button" class="emoji-option" onclick="selectEmoji(this, '⭐')">⭐</button>
+                    <button type="button" class="emoji-option" onclick="selectEmoji(this, '🎯')">🎯</button>
+                    <button type="button" class="emoji-option" onclick="selectEmoji(this, '🌈')">🌈</button>
+                    <button type="button" class="emoji-option" onclick="selectEmoji(this, '🎮')">🎮</button>
+                    <button type="button" class="emoji-option" onclick="selectEmoji(this, '📚')">📚</button>
+                    <button type="button" class="emoji-option" onclick="selectEmoji(this, '🏀')">🏀</button>
+                </div>
+                <input type="hidden" name="avatar" id="avatarEmoji" value="😊"/>
+            </div>
+
+            <!-- Image URL input -->
+            <div class="form-group" id="image-section" style="display:none;">
+                <label for="imageUrl">Profile Image URL</label>
+                <input type="url" id="imageUrl" name="imageUrl"
+                       placeholder="https://example.com/photo.jpg"/>
+                <p class="form-hint">Paste a link to your profile picture</p>
+            </div>
+
+            <button type="submit" class="auth-btn">Create Account</button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Already have an account? <a th:href="@{/login}">Sign in</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setAvatarType(type) {
+        document.getElementById('avatarType').value = type;
+        document.getElementById('emoji-section').style.display = type === 'emoji' ? 'block' : 'none';
+        document.getElementById('image-section').style.display = type === 'image' ? 'block' : 'none';
+        document.getElementById('btn-emoji').classList.toggle('active', type === 'emoji');
+        document.getElementById('btn-image').classList.toggle('active', type === 'image');
+    }
+
+    function selectEmoji(btn, emoji) {
+        document.querySelectorAll('.emoji-option').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        document.getElementById('avatarEmoji').value = emoji;
+    }
+</script>
+
+</body>
+</html>

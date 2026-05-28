@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Test Result — Saxon Math Course 2</title>
+    <link rel="stylesheet" th:href="@{/css/quiz.css}"/>
+    <link rel="stylesheet" th:href="@{/css/auth.css}"/>
+    <link rel="stylesheet" th:href="@{/css/nav.css}"/>
+</head>
+<body>
+
+<header class="app-header">
+    <div class="header-content">
+        <span class="header-icon">📊</span>
+        <div>
+            <h1>Test Results</h1>
+            <p th:text="${test.name}">Test Name</p>
+        </div>
+        <div class="header-profile" th:if="${user}">
+            <div class="profile-section">
+                <div class="profile-avatar" th:if="${user.avatarType == 'emoji'}">
+                    <span class="avatar-emoji" th:text="${user.avatar}">😊</span>
+                </div>
+                <div class="profile-avatar" th:if="${user.avatarType == 'image'}">
+                    <img class="avatar-img" th:src="${user.avatar}" alt="Profile"/>
+                </div>
+                <a th:href="@{/logout}" class="logout-link">Sign out</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="app-layout">
+    <nav class="sidebar-nav">
+        <a th:href="@{/lessons}" class="nav-item">
+            <span class="nav-icon">🎓</span>
+            <span class="nav-label">Lessons</span>
+        </a>
+        <a th:href="@{/quiz}" class="nav-item">
+            <span class="nav-icon">✏️</span>
+            <span class="nav-label">Practice</span>
+        </a>
+        <a th:href="@{/tests}" class="nav-item active">
+            <span class="nav-icon">📝</span>
+            <span class="nav-label">Tests</span>
+        </a>
+        <a th:href="@{/badges}" class="nav-item">
+            <span class="nav-icon">🏆</span>
+            <span class="nav-label">Badges</span>
+        </a>
+    </nav>
+
+    <main class="main-content">
+        <div class="result-container">
+            <!-- Score Card -->
+            <div class="score-card" th:classappend="${result.passed} ? ' passed' : ' failed'">
+                <div class="score-emoji" th:text="${result.passed} ? '🎉' : '📚'">🎉</div>
+                <h2 th:text="${result.passed} ? 'Congratulations! You Passed!' : 'Keep Practicing!'">Result</h2>
+
+                <div class="score-display">
+                    <span class="score-number" th:text="${result.score} + '/' + ${result.totalQuestions}">8/10</span>
+                    <span class="score-percent" th:text="${percentage} + '%'">80%</span>
+                </div>
+
+                <div class="score-bar-track">
+                    <div class="score-bar-fill"
+                         th:classappend="${result.passed} ? ' passed' : ' failed'"
+                         th:style="'width:' + ${percentage} + '%'"></div>
+                </div>
+
+                <p class="pass-threshold">Passing score: 70%</p>
+
+                <div class="difficulty-info">
+                    <span class="difficulty-badge-inline"
+                          th:classappend="${test.difficulty.name() == 'EASY'} ? 'easy' : (${test.difficulty.name() == 'MEDIUM'} ? 'medium' : 'hard')"
+                          th:text="${test.difficulty}">EASY</span>
+                </div>
+            </div>
+
+            <!-- New Badges -->
+            <div class="new-badges-section" th:if="${!newBadges.isEmpty()}">
+                <h3>🏆 New Badges Earned!</h3>
+                <div class="badges-grid">
+                    <div class="badge-card earned" th:each="badge : ${newBadges}">
+                        <span class="badge-emoji" th:text="${badge.badgeEmoji}">🌟</span>
+                        <span class="badge-name" th:text="${badge.badgeName}">Badge Name</span>
+                        <span class="badge-desc" th:text="${badge.badgeDescription}">Description</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="result-actions">
+                <a th:href="@{/tests/{id}(id=${test.id})}" class="action-btn retry">Retake Test</a>
+                <a th:href="@{/tests}" class="action-btn back">Back to Tests</a>
+                <a th:href="@{/badges}" class="action-btn badges">View Badges</a>
+            </div>
+
+            <!-- Review Incorrect Answers -->
+            <div class="review-section" th:if="${!incorrectQuestions.isEmpty()}">
+                <h3 class="review-title">📖 Review Incorrect Answers (<span th:text="${incorrectQuestions.size()}">0</span>)</h3>
+
+                <div class="review-card" th:each="iq, stat : ${incorrectQuestions}">
+                    <div class="review-card-header">
+                        <span class="review-number" th:text="'#' + ${stat.index + 1}">1</span>
+                        <span class="topic-badge" th:text="${iq.topic}">Topic</span>
+                    </div>
+
+                    <p class="review-question" th:text="${iq.questionText}">Question</p>
+
+                    <div class="review-answers">
+                        <div class="review-answer wrong">
+                            <span class="review-label">❌ Your answer:</span>
+                            <span class="review-value" th:text="${iq.userAnswer == '-'} ? 'No answer selected' : (${iq.userAnswer} + ') ' + ${iq.userAnswerText})">A) ...</span>
+                        </div>
+                        <div class="review-answer correct">
+                            <span class="review-label">✅ Correct answer:</span>
+                            <span class="review-value" th:text="${iq.correctAnswer} + ') ' + ${iq.correctAnswerText}">B) ...</span>
+                        </div>
+                    </div>
+
+                    <div class="review-hint">
+                        <div class="hint-header">
+                            <span class="hint-icon">💡</span>
+                            <strong>How to solve this</strong>
+                        </div>
+                        <p class="hint-text" th:text="${iq.hint}">Explanation</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

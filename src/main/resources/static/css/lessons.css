@@ -1,0 +1,376 @@
+/* ── Lessons Grid (Index Page) ─────────────────────────────── */
+.lessons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.25rem;
+    padding: 1.5rem;
+}
+
+.lesson-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.lesson-card:hover {
+    border-color: #a5b4fc;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
+    transform: translateY(-2px);
+}
+
+.lesson-card-icon {
+    font-size: 2.2rem;
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f0ff;
+    border-radius: 12px;
+}
+
+.lesson-card-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.lesson-card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 0.3rem 0;
+}
+
+.lesson-card-desc {
+    font-size: 0.82rem;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.lesson-card-arrow {
+    font-size: 1.3rem;
+    color: #a5b4fc;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+}
+
+.lesson-card:hover .lesson-card-arrow {
+    transform: translateX(3px);
+    color: #4f46e5;
+}
+
+/* ── Lesson Detail Page ───────────────────────────────────── */
+.lesson-detail {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem 3rem;
+}
+
+.back-link {
+    display: inline-block;
+    color: #4f46e5;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    transition: color 0.15s;
+}
+
+.back-link:hover {
+    color: #3730a3;
+}
+
+/* ── Sections ─────────────────────────────────────────────── */
+.lesson-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.lesson-section {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 1.75rem 2rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 0.75rem 0;
+}
+
+.section-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background: #4f46e5;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.section-explanation {
+    color: #4b5563;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0 0 1.5rem 0;
+}
+
+/* ── Worked Examples ──────────────────────────────────────── */
+.worked-example {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-left: 4px solid #4f46e5;
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.worked-example:last-child {
+    margin-bottom: 0;
+}
+
+.example-header {
+    margin-bottom: 0.75rem;
+}
+
+.example-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #4f46e5;
+}
+
+.example-problem {
+    font-size: 0.95rem;
+    color: #1f2937;
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
+.example-steps {
+    margin-bottom: 0.75rem;
+}
+
+.steps-list {
+    margin: 0.5rem 0 0 1.25rem;
+    padding: 0;
+    color: #374151;
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+.steps-list li {
+    margin-bottom: 0.3rem;
+}
+
+.example-answer {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    display: inline-block;
+}
+
+.answer-label {
+    font-weight: 700;
+    color: #065f46;
+    font-size: 0.85rem;
+}
+
+.answer-value {
+    color: #047857;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-left: 0.3rem;
+}
+
+/* ── Key Takeaways ────────────────────────────────────────── */
+.key-takeaways {
+    margin-top: 2.5rem;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 14px;
+    padding: 1.5rem 2rem;
+}
+
+.takeaways-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #92400e;
+    margin: 0 0 1rem 0;
+}
+
+.takeaways-list {
+    margin: 0;
+    padding: 0 0 0 1.25rem;
+    color: #78350f;
+    font-size: 0.9rem;
+    line-height: 1.8;
+}
+
+.takeaways-list li {
+    margin-bottom: 0.25rem;
+}
+
+/* ── Bottom Navigation ────────────────────────────────────── */
+.lesson-bottom-nav {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.btn-back-lessons {
+    display: inline-block;
+    background: #4f46e5;
+    color: white;
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background 0.15s;
+}
+
+.btn-back-lessons:hover {
+    background: #3730a3;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .lessons-grid {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+
+    .lesson-detail {
+        padding: 1rem;
+    }
+
+    .lesson-section {
+        padding: 1.25rem;
+    }
+
+    .worked-example {
+        padding: 1rem;
+    }
+}
+
+/* ── Lessons Layout with TOC ──────────────────────────────── */
+.lessons-layout {
+    display: flex;
+    gap: 1.5rem;
+    max-width: 1200px;
+    padding: 1.5rem;
+}
+
+.lessons-main {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ── Table of Contents Panel ──────────────────────────────── */
+.toc-panel {
+    width: 260px;
+    flex-shrink: 0;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 1.25rem;
+    position: sticky;
+    top: 1rem;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.toc-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.toc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.toc-item {
+    display: block;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.78rem;
+    color: #4b5563;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.12s;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.toc-item:hover {
+    background: #f3f4f6;
+    color: #4f46e5;
+}
+
+.toc-item.active {
+    background: #eef2ff;
+    color: #4f46e5;
+    font-weight: 600;
+}
+
+/* ── TOC Scrollbar ────────────────────────────────────────── */
+.toc-panel::-webkit-scrollbar {
+    width: 5px;
+}
+
+.toc-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.toc-panel::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 99px;
+}
+
+.toc-panel::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+/* ── Responsive: hide TOC on mobile ──────────────────────── */
+@media (max-width: 900px) {
+    .lessons-layout {
+        flex-direction: column;
+    }
+
+    .toc-panel {
+        width: 100%;
+        position: static;
+        max-height: 200px;
+    }
+}

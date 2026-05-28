@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${test.name} + ' — Saxon Math'">Take Test</title>
+    <link rel="stylesheet" th:href="@{/css/quiz.css}"/>
+    <link rel="stylesheet" th:href="@{/css/auth.css}"/>
+    <link rel="stylesheet" th:href="@{/css/nav.css}"/>
+</head>
+<body>
+
+<header class="app-header">
+    <div class="header-content">
+        <span class="header-icon">📝</span>
+        <div>
+            <h1 th:text="${test.name}">Test Name</h1>
+            <p>
+                <span class="difficulty-badge-inline"
+                      th:classappend="${test.difficulty.name() == 'EASY'} ? 'easy' : (${test.difficulty.name() == 'MEDIUM'} ? 'medium' : 'hard')"
+                      th:text="${test.difficulty}">EASY</span>
+                — Page <span th:text="${currentPage + 1}">1</span> of <span th:text="${totalPages}">5</span>
+            </p>
+        </div>
+        <div class="header-profile" th:if="${user}">
+            <div class="profile-section">
+                <div class="profile-avatar" th:if="${user.avatarType == 'emoji'}">
+                    <span class="avatar-emoji" th:text="${user.avatar}">😊</span>
+                </div>
+                <div class="profile-avatar" th:if="${user.avatarType == 'image'}">
+                    <img class="avatar-img" th:src="${user.avatar}" alt="Profile"/>
+                </div>
+                <a th:href="@{/logout}" class="logout-link">Sign out</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="app-layout">
+    <nav class="sidebar-nav">
+        <a th:href="@{/lessons}" class="nav-item">
+            <span class="nav-icon">🎓</span>
+            <span class="nav-label">Lessons</span>
+        </a>
+        <a th:href="@{/quiz}" class="nav-item">
+            <span class="nav-icon">✏️</span>
+            <span class="nav-label">Practice</span>
+        </a>
+        <a th:href="@{/tests}" class="nav-item active">
+            <span class="nav-icon">📝</span>
+            <span class="nav-label">Tests</span>
+        </a>
+        <a th:href="@{/badges}" class="nav-item">
+            <span class="nav-icon">🏆</span>
+            <span class="nav-label">Badges</span>
+        </a>
+    </nav>
+
+    <main class="main-content">
+        <!-- Progress bar -->
+        <div class="progress-bar-wrap">
+            <div class="progress-label">
+                Page <span th:text="${currentPage + 1}">1</span> of <span th:text="${totalPages}">5</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill"
+                     th:style="'width:' + ${(currentPage + 1) * 100 / totalPages} + '%'"></div>
+            </div>
+        </div>
+
+        <form id="test-form" th:action="@{/tests/{id}/save-answers(id=${test.id})}" method="post">
+            <input type="hidden" name="currentPage" th:value="${currentPage}"/>
+
+            <div class="questions-list">
+                <div class="question-card" th:each="q, stat : ${questions}">
+                    <div class="question-header">
+                        <span class="question-number" th:text="'Q' + (${currentPage} * 10 + ${stat.index} + 1)">Q1</span>
+                        <span class="topic-badge" th:text="${q.topic}">Topic</span>
+                    </div>
+
+                    <p class="question-text" th:text="${q.questionText}">Question goes here</p>
+
+                    <div class="test-choices">
+                        <label class="test-choice-label" th:classappend="${sessionAnswers.containsKey(q.id) and sessionAnswers.get(q.id) == 'A'} ? ' selected' : ''">
+                            <input type="radio" th:name="'answer_' + ${q.id}" value="A"
+                                   th:checked="${sessionAnswers.containsKey(q.id) and sessionAnswers.get(q.id) == 'A'}"/>
+                            <span class="choice-label">A</span>
+                            <span class="choice-text" th:text="${q.optionA}">Option A</span>
+                        </label>
+                        <label class="test-choice-label" th:classappend="${sessionAnswers.containsKey(q.id) and sessionAnswers.get(q.id) == 'B'} ? ' selected' : ''">
+                            <input type="radio" th:name="'answer_' + ${q.id}" value="B"
+                                   th:checked="${sessionAnswers.containsKey(q.id) and sessionAnswers.get(q.id) == 'B'}"/>
+                            <span class="choice-label">B</span>
+                            <span class="choice-text" th:text="${q.optionB}">Option B</span>
+                        </label>
+                        <label class="test-choice-label" th:classappend="${sessionAnswers.containsKey(q.id) and sessionAnswers.get(q.id) == 'C'} ? ' selected' : ''">
+                            <input type="radio" th:name="'answer_' + ${q.id}" value="C"
+                                   th:checked="${sessionAnswers.containsKey(q.id) and sessionAnswers.get(q.id) == 'C'}"/>
+                            <span class="choice-label">C</span>
+                            <span class="choice-text" th:text="${q.optionC}">Option C</span>
+                        </label>
+                        <label class="test-choice-label" th:classappend="${sessionAnswers.containsKey(q.id) and sessionAnswers.get(q.id) == 'D'} ? ' selected' : ''">
+                            <input type="radio" th:name="'answer_' + ${q.id}" value="D"
+                                   th:checked="${sessionAnswers.containsKey(q.id) and sessionAnswers.get(q.id) == 'D'}"/>
+                            <span class="choice-label">D</span>
+                            <span class="choice-text" th:text="${q.optionD}">Option D</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation buttons -->
+            <div class="test-nav-buttons">
+                <button type="submit" name="action" value="prev" class="page-btn prev-btn"
+                        th:disabled="${!hasPrevious}">← Previous</button>
+
+                <div th:if="${!isLastPage}">
+                    <button type="submit" name="action" value="next" class="page-btn next-btn">Next →</button>
+                </div>
+                <div th:if="${isLastPage}">
+                    <button type="submit" name="action" value="submit" class="submit-test-btn"
+                            onclick="return confirm('Are you sure you want to submit this test?')">
+                        Submit Test ✓
+                    </button>
+                </div>
+            </div>
+        </form>
+    </main>
+</div>
+
+<script>
+(function() {
+    // ── Answer Selection Highlighting ──
+    document.querySelectorAll('.test-choice-label').forEach(function(label) {
+        label.addEventListener('click', function() {
+            // Remove selected from siblings
+            const parent = this.closest('.test-choices');
+            parent.querySelectorAll('.test-choice-label').forEach(function(sibling) {
+                sibling.classList.remove('selected');
+            });
+            // Add selected to clicked
+            this.classList.add('selected');
+            // Ensure radio is checked
+            const radio = this.querySelector('input[type="radio"]');
+            if (radio) {
+                radio.checked = true;
+            }
+        });
+    });
+})();
+</script>
+
+</body>
+</html>

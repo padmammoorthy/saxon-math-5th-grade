@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Lessons — Saxon Math Course 2</title>
+    <link rel="stylesheet" th:href="@{/css/quiz.css}"/>
+    <link rel="stylesheet" th:href="@{/css/auth.css}"/>
+    <link rel="stylesheet" th:href="@{/css/nav.css}"/>
+    <link rel="stylesheet" th:href="@{/css/lessons.css}"/>
+</head>
+<body>
+
+<header class="app-header">
+    <div class="header-content">
+        <span class="header-icon">🎓</span>
+        <div>
+            <h1>Lessons</h1>
+            <p>Learn key math concepts with worked examples and step-by-step solutions.</p>
+        </div>
+        <div class="header-profile" th:if="${user}">
+            <div class="profile-section">
+                <div class="profile-avatar" th:if="${user.avatarType == 'emoji'}">
+                    <span class="avatar-emoji" th:text="${user.avatar}">😊</span>
+                </div>
+                <div class="profile-avatar" th:if="${user.avatarType == 'image'}">
+                    <img class="avatar-img" th:src="${user.avatar}" alt="Profile"/>
+                </div>
+                <a th:href="@{/logout}" class="logout-link">Sign out</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="app-layout">
+    <nav class="sidebar-nav">
+        <a th:href="@{/lessons}" class="nav-item active">
+            <span class="nav-icon">🎓</span>
+            <span class="nav-label">Lessons</span>
+        </a>
+        <a th:href="@{/quiz}" class="nav-item">
+            <span class="nav-icon">✏️</span>
+            <span class="nav-label">Practice</span>
+        </a>
+        <a th:href="@{/tests}" class="nav-item">
+            <span class="nav-icon">📝</span>
+            <span class="nav-label">Tests</span>
+        </a>
+        <a th:href="@{/badges}" class="nav-item">
+            <span class="nav-icon">🏆</span>
+            <span class="nav-label">Badges</span>
+        </a>
+    </nav>
+
+    <main class="main-content lessons-layout">
+        <!-- Table of Contents sidebar -->
+        <aside class="toc-panel">
+            <h3 class="toc-title">📑 Table of Contents</h3>
+            <div class="toc-list">
+                <a th:each="lesson, stat : ${allLessons}"
+                   th:href="@{/lessons/{slug}(slug=${lesson.slug})}"
+                   class="toc-item"
+                   th:text="${stat.index + 1} + '. ' + ${lesson.title}">1. Lesson</a>
+            </div>
+        </aside>
+
+        <!-- Lessons grid with pagination -->
+        <div class="lessons-main">
+            <!-- Page info -->
+            <div class="progress-bar-wrap">
+                <div class="progress-label">
+                    Page <span th:text="${currentPage + 1}">1</span> of <span th:text="${totalPages}">10</span>
+                    — Lessons <span th:text="${currentPage * 12 + 1}">1</span> to <span th:text="${currentPage * 12 + #lists.size(lessons)}">12</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill"
+                         th:style="'width:' + ${(currentPage + 1) * 100 / totalPages} + '%'"></div>
+                </div>
+            </div>
+
+            <!-- Lesson cards -->
+            <div class="lessons-grid">
+                <a th:each="lesson, stat : ${lessons}"
+                   th:href="@{/lessons/{slug}(slug=${lesson.slug})}"
+                   class="lesson-card">
+                    <div class="lesson-card-icon" th:text="${lesson.icon}">📐</div>
+                    <div class="lesson-card-body">
+                        <h3 class="lesson-card-title" th:text="${lesson.title}">Lesson Title</h3>
+                        <p class="lesson-card-desc" th:text="${lesson.description}">Description</p>
+                    </div>
+                    <span class="lesson-card-arrow">→</span>
+                </a>
+            </div>
+
+            <!-- Pagination -->
+            <nav class="pagination">
+                <a th:if="${hasPrevious}" th:href="@{/lessons(page=${currentPage - 1})}" class="page-btn prev-btn">
+                    ← Previous
+                </a>
+                <span th:unless="${hasPrevious}" class="page-btn disabled">← Previous</span>
+
+                <div class="page-numbers">
+                    <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                       th:href="@{/lessons(page=${i})}"
+                       th:text="${i + 1}"
+                       th:class="${i == currentPage} ? 'page-num active' : 'page-num'">1</a>
+                </div>
+
+                <a th:if="${hasNext}" th:href="@{/lessons(page=${currentPage + 1})}" class="page-btn next-btn">
+                    Next →
+                </a>
+                <span th:unless="${hasNext}" class="page-btn disabled">Next →</span>
+            </nav>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

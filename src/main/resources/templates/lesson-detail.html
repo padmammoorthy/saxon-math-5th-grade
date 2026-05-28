@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${lesson.title} + ' — Saxon Math Course 2'">Lesson</title>
+    <link rel="stylesheet" th:href="@{/css/quiz.css}"/>
+    <link rel="stylesheet" th:href="@{/css/auth.css}"/>
+    <link rel="stylesheet" th:href="@{/css/nav.css}"/>
+    <link rel="stylesheet" th:href="@{/css/lessons.css}"/>
+</head>
+<body>
+
+<header class="app-header">
+    <div class="header-content">
+        <span class="header-icon" th:text="${lesson.icon}">🎓</span>
+        <div>
+            <h1 th:text="${lesson.title}">Lesson Title</h1>
+            <p th:text="${lesson.description}">Lesson description</p>
+        </div>
+        <div class="header-profile" th:if="${user}">
+            <div class="profile-section">
+                <div class="profile-avatar" th:if="${user.avatarType == 'emoji'}">
+                    <span class="avatar-emoji" th:text="${user.avatar}">😊</span>
+                </div>
+                <div class="profile-avatar" th:if="${user.avatarType == 'image'}">
+                    <img class="avatar-img" th:src="${user.avatar}" alt="Profile"/>
+                </div>
+                <a th:href="@{/logout}" class="logout-link">Sign out</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="app-layout">
+    <nav class="sidebar-nav">
+        <a th:href="@{/lessons}" class="nav-item active">
+            <span class="nav-icon">🎓</span>
+            <span class="nav-label">Lessons</span>
+        </a>
+        <a th:href="@{/quiz}" class="nav-item">
+            <span class="nav-icon">✏️</span>
+            <span class="nav-label">Practice</span>
+        </a>
+        <a th:href="@{/tests}" class="nav-item">
+            <span class="nav-icon">📝</span>
+            <span class="nav-label">Tests</span>
+        </a>
+        <a th:href="@{/badges}" class="nav-item">
+            <span class="nav-icon">🏆</span>
+            <span class="nav-label">Badges</span>
+        </a>
+    </nav>
+
+    <main class="main-content lessons-layout">
+        <!-- Table of Contents sidebar -->
+        <aside class="toc-panel">
+            <h3 class="toc-title">📑 Table of Contents</h3>
+            <div class="toc-list">
+                <a th:each="l, stat : ${allLessons}"
+                   th:href="@{/lessons/{slug}(slug=${l.slug})}"
+                   th:class="${l.slug == lesson.slug} ? 'toc-item active' : 'toc-item'"
+                   th:text="${stat.index + 1} + '. ' + ${l.title}">1. Lesson</a>
+            </div>
+        </aside>
+
+        <div class="lessons-main">
+        <div class="lesson-detail">
+            <!-- Back link -->
+            <a th:href="@{/lessons}" class="back-link">← Back to All Lessons</a>
+
+            <!-- Sections -->
+            <div class="lesson-sections">
+                <div th:each="section, sectionStat : ${lesson.sections}" class="lesson-section">
+                    <h2 class="section-heading">
+                        <span class="section-number" th:text="${sectionStat.index + 1}">1</span>
+                        <span th:text="${section.heading}">Section Heading</span>
+                    </h2>
+                    <p class="section-explanation" th:text="${section.explanation}">Explanation text</p>
+
+                    <!-- Worked Examples -->
+                    <div th:each="example, exStat : ${section.examples}" class="worked-example">
+                        <div class="example-header">
+                            <span class="example-label">Example <span th:text="${exStat.index + 1}">1</span></span>
+                        </div>
+                        <div class="example-problem">
+                            <strong>Problem:</strong> <span th:text="${example.problem}">Problem text</span>
+                        </div>
+                        <div class="example-steps">
+                            <strong>Solution:</strong>
+                            <ol class="steps-list">
+                                <li th:each="step : ${example.steps}" th:text="${step}">Step text</li>
+                            </ol>
+                        </div>
+                        <div class="example-answer">
+                            <span class="answer-label">Answer:</span>
+                            <span class="answer-value" th:text="${example.answer}">Answer</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Takeaways -->
+            <div class="key-takeaways">
+                <h2 class="takeaways-title">📌 Key Takeaways</h2>
+                <ul class="takeaways-list">
+                    <li th:each="takeaway : ${lesson.keyTakeaways}" th:text="${takeaway}">Takeaway</li>
+                </ul>
+            </div>
+
+            <!-- Bottom nav -->
+            <div class="lesson-bottom-nav">
+                <a th:href="@{/lessons}" class="btn-back-lessons">← All Lessons</a>
+            </div>
+        </div>
+        </div><!-- close lessons-main -->
+    </main>
+</div>
+
+</body>
+</html>

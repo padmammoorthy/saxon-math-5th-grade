@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Saxon Math Course 2 — Learn</title>
+    <link rel="stylesheet" th:href="@{/css/quiz.css}"/>
+    <link rel="stylesheet" th:href="@{/css/auth.css}"/>
+    <link rel="stylesheet" th:href="@{/css/nav.css}"/>
+</head>
+<body>
+
+<header class="app-header">
+    <div class="header-content">
+        <span class="header-icon">📐</span>
+        <div>
+            <h1>Saxon Math — Course 2</h1>
+            <p>Grade 7 practice. Answer each question and check your work.</p>
+        </div>
+        <!-- User profile (top-right) -->
+        <div class="header-profile" th:if="${user}">
+            <div class="profile-section">
+                <div class="profile-avatar" th:if="${user.avatarType == 'emoji'}">
+                    <span class="avatar-emoji" th:text="${user.avatar}">😊</span>
+                </div>
+                <div class="profile-avatar" th:if="${user.avatarType == 'image'}">
+                    <img class="avatar-img" th:src="${user.avatar}" alt="Profile"/>
+                </div>
+                <a th:href="@{/logout}" class="logout-link">Sign out</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="app-layout">
+    <nav class="sidebar-nav">
+        <a th:href="@{/lessons}" class="nav-item">
+            <span class="nav-icon">🎓</span>
+            <span class="nav-label">Lessons</span>
+        </a>
+        <a th:href="@{/quiz}" class="nav-item active">
+            <span class="nav-icon">✏️</span>
+            <span class="nav-label">Practice</span>
+        </a>
+        <a th:href="@{/tests}" class="nav-item">
+            <span class="nav-icon">📝</span>
+            <span class="nav-label">Tests</span>
+        </a>
+        <a th:href="@{/badges}" class="nav-item">
+            <span class="nav-icon">🏆</span>
+            <span class="nav-label">Badges</span>
+        </a>
+    </nav>
+
+    <main class="main-content">
+        <!-- Progress bar -->
+        <div class="progress-bar-wrap">
+            <div class="progress-label">
+                Page <span th:text="${currentPage + 1}">1</span> of <span th:text="${totalPages}">5</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill"
+                     th:style="'width:' + ${(currentPage + 1) * 100 / totalPages} + '%'"></div>
+            </div>
+        </div>
+
+        <!-- Question cards -->
+        <div class="questions-list">
+            <div class="question-card" th:each="q, stat : ${questions}" th:id="'card-' + ${q.id}">
+
+                <!-- Lesson title banner -->
+                <div class="lesson-title-bar">
+                    <span class="lesson-number-pill" th:text="'Lesson ' + ${q.lessonNumber}">Lesson 1</span>
+                    <span class="lesson-title-text" th:text="${q.lessonTitle}">Lesson Title</span>
+                </div>
+
+                <!-- Question header -->
+                <div class="question-header">
+                    <span class="question-number" th:text="'Q' + ${currentPage * 5 + stat.index + 1}">Q1</span>
+                    <span class="topic-badge" th:text="${q.topic}">Topic</span>
+                </div>
+
+                <!-- Question text -->
+                <p class="question-text" th:text="${q.questionText}">Question goes here</p>
+
+                <!-- Answer choices -->
+                <div class="choices" th:id="'choices-' + ${q.id}">
+                    <button class="choice-btn"
+                            th:data-question-id="${q.id}"
+                            th:data-answer="'A'"
+                            th:onclick="'submitAnswer(' + ${q.id} + ', \'A\')'"
+                            th:id="'btn-' + ${q.id} + '-A'">
+                        <span class="choice-label">A</span>
+                        <span class="choice-text" th:text="${q.optionA}">Option A</span>
+                    </button>
+                    <button class="choice-btn"
+                            th:data-question-id="${q.id}"
+                            th:data-answer="'B'"
+                            th:onclick="'submitAnswer(' + ${q.id} + ', \'B\')'"
+                            th:id="'btn-' + ${q.id} + '-B'">
+                        <span class="choice-label">B</span>
+                        <span class="choice-text" th:text="${q.optionB}">Option B</span>
+                    </button>
+                    <button class="choice-btn"
+                            th:data-question-id="${q.id}"
+                            th:data-answer="'C'"
+                            th:onclick="'submitAnswer(' + ${q.id} + ', \'C\')'"
+                            th:id="'btn-' + ${q.id} + '-C'">
+                        <span class="choice-label">C</span>
+                        <span class="choice-text" th:text="${q.optionC}">Option C</span>
+                    </button>
+                    <button class="choice-btn"
+                            th:data-question-id="${q.id}"
+                            th:data-answer="'D'"
+                            th:onclick="'submitAnswer(' + ${q.id} + ', \'D\')'"
+                            th:id="'btn-' + ${q.id} + '-D'">
+                        <span class="choice-label">D</span>
+                        <span class="choice-text" th:text="${q.optionD}">Option D</span>
+                    </button>
+                </div>
+
+                <!-- Result feedback (hidden until answered) -->
+                <div class="result-area" th:id="'result-' + ${q.id}" style="display:none;">
+                    <div class="result-badge" th:id="'badge-' + ${q.id}"></div>
+                    <!-- Hint widget -->
+                    <div class="hint-widget" th:id="'hint-' + ${q.id}">
+                        <div class="hint-header">
+                            <span class="hint-icon">💡</span>
+                            <strong>How to solve this</strong>
+                        </div>
+                        <p class="hint-text" th:id="'hint-text-' + ${q.id}" th:text="${q.hint}">Hint text</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <nav class="pagination">
+            <a th:if="${hasPrevious}" th:href="@{/quiz(page=${currentPage - 1})}" class="page-btn prev-btn">
+                ← Previous
+            </a>
+            <span th:unless="${hasPrevious}" class="page-btn disabled">← Previous</span>
+
+            <div class="page-numbers">
+                <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                   th:href="@{/quiz(page=${i})}"
+                   th:text="${i + 1}"
+                   th:class="${i == currentPage} ? 'page-num active' : 'page-num'">1</a>
+            </div>
+
+            <a th:if="${hasNext}" th:href="@{/quiz(page=${currentPage + 1})}" class="page-btn next-btn">
+                Next →
+            </a>
+            <span th:unless="${hasNext}" class="page-btn disabled">Next →</span>
+        </nav>
+    </main>
+</div>
+
+<script>
+    function submitAnswer(questionId, selectedAnswer) {
+        // Disable all buttons for this question
+        const buttons = document.querySelectorAll(`[data-question-id="${questionId}"]`);
+        buttons.forEach(btn => btn.disabled = true);
+
+        fetch('/answer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `questionId=${questionId}&selectedAnswer=${selectedAnswer}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            // Style the selected button
+            const selectedBtn = document.getElementById(`btn-${questionId}-${selectedAnswer}`);
+            const correctBtn  = document.getElementById(`btn-${questionId}-${data.correctAnswer}`);
+
+            if (data.correct) {
+                selectedBtn.classList.add('correct');
+            } else {
+                selectedBtn.classList.add('wrong');
+                correctBtn.classList.add('correct');
+            }
+
+            // Show result badge
+            const badge = document.getElementById(`badge-${questionId}`);
+            badge.textContent = data.correct ? '✅ Correct!' : '❌ Incorrect';
+            badge.className = 'result-badge ' + (data.correct ? 'badge-correct' : 'badge-wrong');
+
+            // Show result area with hint
+            const resultArea = document.getElementById(`result-${questionId}`);
+            resultArea.style.display = 'block';
+            resultArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        })
+        .catch(err => console.error('Error submitting answer:', err));
+    }
+</script>
+
+</body>
+</html>
