@@ -1,6 +1,4 @@
 # Render Blueprint — deploy with one click
-# https://render.com/docs/blueprint-spec
-
 services:
   - type: web
     name: saxon-math-quiz
@@ -8,10 +6,18 @@ services:
     repo: https://github.com/padmammoorthy/saxon-math-5th-grade
     plan: free
     envVars:
-      - key: DATABASE_URL
+      - key: DB_HOST
         fromDatabase:
           name: saxon-math-db
-          property: connectionString
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: saxon-math-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: saxon-math-db
+          property: database
       - key: DB_USERNAME
         fromDatabase:
           name: saxon-math-db
