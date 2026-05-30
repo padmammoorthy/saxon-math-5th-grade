@@ -45,6 +45,7 @@ public class LessonContent {
     public static class Section {
         private String heading;
         private String explanation;
+        private String illustration; // optional SVG/HTML illustration
         private List<WorkedExample> examples;
 
         public Section() {
@@ -53,6 +54,14 @@ public class LessonContent {
         public Section(String heading, String explanation, List<WorkedExample> examples) {
             this.heading = heading;
             this.explanation = explanation;
+            this.illustration = null;
+            this.examples = examples;
+        }
+
+        public Section(String heading, String explanation, String illustration, List<WorkedExample> examples) {
+            this.heading = heading;
+            this.explanation = explanation;
+            this.illustration = illustration;
             this.examples = examples;
         }
 
@@ -61,6 +70,9 @@ public class LessonContent {
 
         public String getExplanation() { return explanation; }
         public void setExplanation(String explanation) { this.explanation = explanation; }
+
+        public String getIllustration() { return illustration; }
+        public void setIllustration(String illustration) { this.illustration = illustration; }
 
         public List<WorkedExample> getExamples() { return examples; }
         public void setExamples(List<WorkedExample> examples) { this.examples = examples; }

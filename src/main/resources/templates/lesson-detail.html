@@ -78,6 +78,9 @@
                     </h2>
                     <p class="section-explanation" th:text="${section.explanation}">Explanation text</p>
 
+                    <!-- SVG Illustration (if present) -->
+                    <div class="section-illustration" th:if="${section.illustration}" th:utext="${section.illustration}"></div>
+
                     <!-- Worked Examples -->
                     <div th:each="example, exStat : ${section.examples}" class="worked-example">
                         <div class="example-header">
